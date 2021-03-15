@@ -544,9 +544,8 @@ BEGIN
 		        IF (@errortext like '%online index operation cannot be performed%' or @errortext like '%online operation cannot be performed for index%')
 		        BEGIN
 			        BEGIN TRY
-				        SET @command = REPLACE(@command, 'REBUILD WITH (ONLINE)', 'REORGANIZE')
-				        SET @command = REPLACE(@command, 'REBUILD WITH (OFFLINE)', 'REORGANIZE')
-				        EXEC (@command)
+				       SET @command = REPLACE(@command, 'REBUILD WITH (ONLINE = ON(WAIT_AT_LOW_PRIORITY (MAX_DURATION = 1 MINUTES, ABORT_AFTER_WAIT = SELF)))', 'REORGANIZE')
+				       EXEC (@command)
 			        END TRY
 			        BEGIN CATCH
 				        SELECT @errortext = ERROR_MESSAGE();
